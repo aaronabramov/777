@@ -3,16 +3,23 @@
  */
 
 import Mutex from './mutex';
+import runTestBlock from './run_test_block';
 
 const GLOBAL_DESCRIBE_ID = '__global_describe__';
 
 const mutex = new Mutex();
 
+type DispatcherEvent = 'test_start' | 'test_end' | 'test_pass' | 'test_fail'
+| 'suite_start' | 'suite_end' | 'hook_start' | 'hook_end' | 'hook_pass'
+| 'hook_fail';
+
+type DispatcherData = Describe | Test | Hook;
+
 class Runnable {
   id: string;
   parent: Describe;
   depth: ?number;
-
+  fn: Function;
 
   getDepth() {
     if (typeof this.depth === 'number') {
@@ -30,10 +37,53 @@ class Runnable {
   }
 }
 
-type DispatcherEvent = 'test_start' | 'test_end' | 'test_pass' | 'test_fail'
-  | 'suite_start' | 'suite_end';
+type HookType = 'beforeEach' | 'afterEach' | 'before' | 'after';
 
-type DispatcherData = Describe | Test;
+class Hook extends Runnable {
+  type: HookType;
+  fn: Function;
+  error: Error;
+  // hooks are run multiple times for different tests. If it fails once, it'll
+  // probably fail  again, so there is no point  in re-running it, we'd rather
+  // fail all tests  that depend on this hook right away. (applicable only for
+  // `before` hooks)
+  everFailed: bool;
+
+  constructor(type: HookType, fn: Function) {
+    super();
+    this.type = type;
+    this.fn = fn;
+  }
+
+
+  run() {
+    mutex.sync(() => {
+      this._start();
+      return runTestBlock(this.fn).then(() => {
+        this._pass();
+      }).catch((err) => {
+        this._fail(err);
+      });
+    });
+  }
+
+  _start() {
+    dispatcher.dispatch('hook_start', this);
+  }
+
+  _pass() {
+    dispatcher.dispatch('hook_pass', this);
+    dispatcher.dispatch('hook_end', this);
+  }
+
+  _fail(err: Error) {
+    this.everFailed = true;
+    this.error = err;
+    dispatcher.dispatch('hook_fail', this);
+    dispatcher.dispatch('hook_end', this);
+  }
+}
+
 
 class Dispatcher {
   callbacks: Array<Function>;
@@ -53,7 +103,7 @@ class Dispatcher {
 
 const dispatcher = new Dispatcher();
 
-class Test extends Runnable {
+export class Test extends Runnable {
   fn: Function;
   status: 'failed' | 'passed';
   error: Error;
@@ -65,42 +115,35 @@ class Test extends Runnable {
   }
 
   run() {
-    mutex.sync((release) => {
-      dispatcher.dispatch('test_start', this);
-      try {
-        if (this.fn.length > 0) { // arity is 1 (done cb is passed)
-          return this.fn((err) => {
-            if (err) {
-              this._fail(err);
-              return release();
-            }
-            this._pass();
-            release();
-          });
-        }
 
-        const promise = this.fn();
+    getHooks(this, 'beforeEach').reverse().forEach(hook => hook.run());
 
-        if (promise instanceof Promise) {
-          return promise
-            .then(this._pass.bind(this))
-            .catch(this._fail.bind(this));
-        }
-
-        if (promise === undefined) {
-          this._pass();
-          return release();
-        }
-
-        this._fail(
-          new Error('Unexpected return. Expected Promise or undefined')
-        );
+    if (
+      getHooks(this, 'before')
+      .concat(getHooks(this, 'beforeEach'))
+      .some(h => h.everFailed)
+    ) {
+      mutex.sync((release) => {
+        this._start();
+        this._fail(new Error('one of before hooks failed for this test'));
         release();
-      } catch (err) {
+      });
+      return;
+    }
+
+    mutex.sync(() => {
+      this._start();
+      return runTestBlock(this.fn).then(() => {
+        this._pass();
+      }).catch((err) => {
         this._fail(err);
-        release();
-      }
+      });
     });
+    getHooks(this, 'afterEach').forEach(hook => hook.run());
+  }
+
+  _start() {
+    dispatcher.dispatch('test_start', this);
   }
 
   _pass() {
@@ -115,32 +158,19 @@ class Test extends Runnable {
     dispatcher.dispatch('test_fail', this);
     dispatcher.dispatch('test_end', this);
   }
-
-  getDepth() {
-    if (typeof this.depth === 'number') {
-      return this.depth;
-    }
-
-    let depth = 0;
-    let parent = this.parent;
-
-    while(parent && (parent = parent.parent)) {
-      depth += 1;
-    }
-
-    return this.depth = depth;
-  }
 }
 
 class Describe extends Runnable {
   children: Array<Describe>;
   tests: Array<Test>;
+  hooks: Array<Hook>;
 
   constructor(id: string) {
     super();
     this.id = id;
     this.children = [];
     this.tests = [];
+    this.hooks = [];
   }
 
   addChild(child: Describe) {
@@ -153,13 +183,19 @@ class Describe extends Runnable {
     this.tests.push(test);
   }
 
+  addHook(hook: Hook) {
+    this.hooks.push(hook);
+  }
+
   run() {
     mutex.sync((release) => {
       dispatcher.dispatch('suite_start', this);
       release();
     });
+    this.hooks.filter(({type}) => type === 'before').forEach(h => h.run());
     this.tests.forEach(t => t.run());
     this.children.forEach(d => d.run());
+    this.hooks.filter(({type}) => type === 'after').forEach(h => h.run());
     mutex.sync((release) => {
       dispatcher.dispatch('suite_end', this);
       release();
@@ -189,10 +225,44 @@ export function it(id: string, fn: Function): void {
   currentDescribe.addTest(test);
 }
 
+export function beforeEach(fn: Function) {
+  const currentDescribe = describeStack[describeStack.length - 1];
+  currentDescribe.addHook(new Hook('beforeEach', fn));
+}
+
+export function afterEach(fn: Function) {
+  const currentDescribe = describeStack[describeStack.length - 1];
+  currentDescribe.addHook(new Hook('afterEach', fn));
+}
+
+export function before(fn: Function) {
+  const currentDescribe = describeStack[describeStack.length - 1];
+  currentDescribe.addHook(new Hook('before', fn));
+}
+
+export function after(fn: Function) {
+  const currentDescribe = describeStack[describeStack.length - 1];
+  currentDescribe.addHook(new Hook('after', fn));
+}
+
 export function getTestTree(): Describe {
   return globalDescribe;
 }
 
 export function getDispatcher(): Dispatcher {
   return dispatcher;
+}
+
+export default function getHooks(
+  test: Test,
+  hookType: HookType,
+): Array<Hook> {
+  let parent: Describe = test.parent;
+  let hooks = [].concat(parent.hooks);
+
+  while(parent && (parent = parent.parent)) {
+    hooks = hooks.concat(parent.hooks);
+  }
+
+  return hooks.filter(hook => hook.type === hookType);
 }
