@@ -1,3 +1,4 @@
+// @flow
 import Describe from './describe';
 import It from './it';
 import {last} from './utils';
@@ -24,7 +25,7 @@ export function it(name: string, fn: RunnableFunction) {
   currentDescribe.its.push(new It(name, fn));
 }
 
-export function beforeEach(fn) {
+export function beforeEach(fn): Promise {
   last(global.__describe_stack__).beforeEach.push(fn);
 }
 

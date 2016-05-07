@@ -1,3 +1,4 @@
+// @flow
 import type It from './it';
 import type {RunnableFunction} from './types';
 

@@ -1,3 +1,5 @@
+// @flow
+
 import type It from './it';
 import type Describe from './describe';
 import type {RunnableFunction} from './types';
@@ -23,7 +25,11 @@ export async function run() {
       visited.set(describe, true);
       dispatcher.dispatch('suite_start', describe);
       for (let it of describe.its) {
-        await runIt(dispatch, stack, it);
+        try {
+          await runIt(dispatch, stack, it);
+        } catch (error) {
+          console.error('TEST FAIL', error);
+        }
       }
       // await runPromisesInSequence(describe.its.map((it) => runIt(dispatch, stack, it)));
     } else {
@@ -40,10 +46,14 @@ export async function run() {
 
 async function runIt(dispatch, stack: Stack, it: It) {
   dispatch('test_start', it);
-  for (let fn of getBeforeEachHooks(stack)) { await runRunnableFunction(fn); }
-  await runRunnableFunction(it.fn);
-  for (let fn of getAfterEachHooks(stack)) { await runRunnableFunction(fn); }
-  dispatch('test_pass', it);
+  try {
+    for (let fn of getBeforeEachHooks(stack)) { await runRunnableFunction(fn); }
+    await runRunnableFunction(it.fn);
+    for (let fn of getAfterEachHooks(stack)) { await runRunnableFunction(fn); }
+    dispatch('test_pass', it);
+  } catch (error) {
+    dispatch('test_fail', it, {error});
+  }
   dispatch('test_end', it);
 }
 
