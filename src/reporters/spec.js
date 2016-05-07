@@ -27,18 +27,23 @@ export default function(
 
   case 'test_fail':
     invariant(object);
-    console.log(getIndent() + chalk.red('✘ '), object.name);
+    console.log(getIndent() + chalk.red('✘'), object.name);
     invariant(data && data.error);
     errors.push({object, error: data.error});
     break;
 
   case 'test_pass':
     invariant(object);
-    console.log(getIndent() + chalk.green('✔ '), object.name);
+    console.log(getIndent() + chalk.green('✔'), object.name);
     break;
 
   case 'suite_end':
     indent -= 1;
+    break;
+
+  case 'test_skip':
+    invariant(object);
+    console.log(getIndent() + chalk.yellow('•', object.name));
     break;
 
   case 'end':

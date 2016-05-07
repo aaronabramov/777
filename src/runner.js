@@ -52,10 +52,18 @@ export async function run(callback: Function) {
 
 async function runIt(dispatch, stack: Stack, it: It) {
   dispatch('test_start', it);
+
+  if (it.skipped || anyOfDescribesSkipped(stack)) {
+    dispatch('test_skip', it);
+    dispatch('test_end', it);
+    return;
+  }
+
   try {
-    for (let fn of getBeforeEachHooks(stack)) { await runRunnableFunction(fn); }
-    await runRunnableFunction(it.fn);
-    for (let fn of getAfterEachHooks(stack)) { await runRunnableFunction(fn); }
+    const context = Object.create(null);
+    for (let fn of getBeforeEachHooks(stack)) { await runRunnableFunction(fn, context); }
+    await runRunnableFunction(it.fn, context);
+    for (let fn of getAfterEachHooks(stack)) { await runRunnableFunction(fn, context); }
     dispatch('test_pass', it);
   } catch (error) {
     dispatch('test_fail', it, {error});
@@ -75,4 +83,8 @@ function getAfterEachHooks(stack: Stack) {
   return stack.reduceRight((hooks, describe) => {
     return hooks.concat(describe.afterEach);
   }, []);
+}
+
+function anyOfDescribesSkipped(stack: Stack): boolean {
+  return stack.some(describe => describe.skipped);
 }

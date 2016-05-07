@@ -1,4 +1,5 @@
 // @flow
+
 import type It from './it';
 import type {RunnableFunction} from './types';
 
@@ -10,6 +11,7 @@ export default class Describe {
   afterEach: Array<RunnableFunction>;
   beforeAll: Array<RunnableFunction>;
   afterAll: Array<RunnableFunction>;
+  skipped: boolean;
 
   constructor(name: string) {
     this.name = name;
@@ -19,5 +21,6 @@ export default class Describe {
     this.beforeAll = [];
     this.afterEach = [];
     this.afterAll = [];
+    this.skipped = false;
   }
 }
