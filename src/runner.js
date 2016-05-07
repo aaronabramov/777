@@ -3,20 +3,22 @@
 import type It from './it';
 import type Describe from './describe';
 import type {RunnableFunction} from './types';
-import spec from '../reporters/spec';
 
 import {last} from './utils';
 import Dispatcher from './dispatcher';
 
 type Stack = Array<Describe>;
 
-export async function run() {
+export async function run(callback: Function) {
   const visited = new Map();
   const stack: Stack = [global.__global_describe__];
   const dispatcher = new Dispatcher();
   const {dispatch} = dispatcher;
+  let failed = false;
 
-  dispatcher.register(spec);
+  if (callback) {
+    dispatcher.register(callback);
+  }
 
   while (stack.length) {
     const describe = last(stack);
@@ -28,8 +30,8 @@ export async function run() {
         try {
           await runIt(dispatch, stack, it);
         } catch (error) {
-          console.error('TEST FAIL', error);
-        }
+          failed = true;
+        } // eslint-disable-line
       }
       // await runPromisesInSequence(describe.its.map((it) => runIt(dispatch, stack, it)));
     } else {
@@ -42,6 +44,10 @@ export async function run() {
       }
     }
   }
+
+  dispatch('end');
+
+  return {failed};
 }
 
 async function runIt(dispatch, stack: Stack, it: It) {
@@ -53,8 +59,10 @@ async function runIt(dispatch, stack: Stack, it: It) {
     dispatch('test_pass', it);
   } catch (error) {
     dispatch('test_fail', it, {error});
+    throw error;
+  } finally {
+    dispatch('test_end', it);
   }
-  dispatch('test_end', it);
 }
 
 function getBeforeEachHooks(stack: Stack) {

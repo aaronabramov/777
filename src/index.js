@@ -32,8 +32,3 @@ export function beforeEach(fn): Promise {
 export function afterEach(fn) {
   last(global.__describe_stack__).afterEach.push(fn);
 }
-
-// export function beforeAll() {}
-// export function beforeEach() {}
-// export function afterAll() {}
-// export function afterEach() {}
