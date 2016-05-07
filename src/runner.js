@@ -53,7 +53,7 @@ export async function run(callback: Function) {
 async function runIt(dispatch, stack: Stack, it: It) {
   dispatch('test_start', it);
 
-  if (it.skipped || anyOfDescribesSkipped(stack)) {
+  if (isTestSkipped(it, stack)) {
     dispatch('test_skip', it);
     dispatch('test_end', it);
     return;
@@ -85,6 +85,11 @@ function getAfterEachHooks(stack: Stack) {
   }, []);
 }
 
-function anyOfDescribesSkipped(stack: Stack): boolean {
-  return stack.some(describe => describe.skipped);
+// true if this test or any of the parent describe blocks are skipped OR
+// if there is anything with `only === true` in the tree and it's not this
+// test or any of its parent describes.
+function isTestSkipped(it: It, stack: Stack): boolean {
+  return it.skipped || stack.some(describe => describe.skipped) ||
+    (global.__is_there_any_only_calls__ && !it.only &&
+       !stack.some(describe => describe.only));
 }

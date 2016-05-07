@@ -12,6 +12,7 @@ export default class Describe {
   beforeAll: Array<RunnableFunction>;
   afterAll: Array<RunnableFunction>;
   skipped: boolean;
+  only: boolean;
 
   constructor(name: string) {
     this.name = name;
@@ -22,5 +23,6 @@ export default class Describe {
     this.afterEach = [];
     this.afterAll = [];
     this.skipped = false;
+    this.only = false;
   }
 }

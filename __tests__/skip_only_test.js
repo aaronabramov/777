@@ -28,4 +28,36 @@ describe('skip/only', function() {
     assert.ok(stdout.match('✔ is not skipped'));
     assert.equal(status, 0);
   });
+
+  it('runs a single it', function() {
+    const {stdout, status} = runInline(`
+      it.only('runs', () => {});
+      it('doesnt', () => { throw new Error('sholudnt be thrown')});
+      it('doesnt2', () => { throw new Error('sholudnt be thrown')});
+    `);
+
+    assert.ok(stdout.match('✔ runs'));
+    assert.ok(stdout.match('• doesnt'));
+    assert.ok(stdout.match('• doesnt2'));
+    assert.equal(status, 0);
+  });
+
+  it('runs a single describe', function() {
+    const {stdout, status} = runInline(`
+      describe.only('only', function() {
+        it('runs', () => {});
+      });
+
+      describe('skipped', () => {
+        it('doesnt', () => { throw new Error('sholudnt be thrown')});
+      });
+
+      it('doesnt2', () => { throw new Error('sholudnt be thrown')});
+    `);
+
+    assert.ok(stdout.match('✔ runs'));
+    assert.ok(stdout.match('• doesnt'));
+    assert.ok(stdout.match('• doesnt2'));
+    assert.equal(status, 0);
+  });
 });
