@@ -1,26 +1,23 @@
 import {
   it,
   describe,
-  getTestTree,
-  getDispatcher,
   beforeEach,
   afterEach,
-  before,
-  after,
-} from '../';
-import spec from '../reporters/spec';
+  beforeAll,
+  afterAll,
+} from '../src/index';
 
-before(() => {
+beforeAll(() => {
   return new Promise(resolve => {
     setTimeout(() => {
-      console.log('THE VERY FIRST BEFORE');
+      console.log('THE VERY FIRST beforeAll');
       resolve();
     }, 200);
   });
 });
 
-after(() => {
-  console.log('THE VERY LAST AFTER');
+afterAll(() => {
+  console.log('THE VERY LAST afterAll');
 });
 
 describe('abc', function() {
@@ -42,12 +39,12 @@ describe('abc', function() {
 });
 
 describe('async tests', function() {
-  before(() => {
-    console.log('global BEFORE hook');
+  beforeAll(() => {
+    console.log('global beforeAll hook');
   });
 
-  after(() => {
-    console.log('global AFTER hook');
+  afterAll(() => {
+    console.log('global afterAll hook');
   });
 
   afterEach(() => {
@@ -91,10 +88,6 @@ describe('hook failures', function() {
   });
 });
 
-const dispatcher = getDispatcher();
-
-dispatcher.register(spec);
-
-
-getTestTree().run();
-// setTimeout(() => console.log(JSON.stringify(getTestTree(), null, 2)), 0);
+// console.log('SNTHSNTHSNTH');
+//
+// console.log(JSON.stringify(global.__global_describe__, null ,2));

@@ -1,20 +1,29 @@
 import chalk from 'chalk';
 
-function getIndent(n) {
-  return Array(n + 1).join('  ');
+let indent = 0;
+
+function getIndent() {
+  return Array(indent + 1).join('  ');
 }
 
 export default function(event, data) {
   switch (event) {
   case 'suite_start':
-    console.log(getIndent(data.getDepth()), data.id);
+    indent += 1;
+    console.log(getIndent() + data.name);
     break;
 
   case 'test_fail':
-    console.log(getIndent(data.getDepth()), chalk.red('✘ '), data.id);
+    console.log(getIndent() + chalk.red('✘ '), data.name);
     break;
 
   case 'test_pass':
-    console.log(getIndent(data.getDepth()), chalk.green('✔ '), data.id);
+    console.log(getIndent() + chalk.green('✔ '), data.name);
+    break;
+
+  case 'suite_end':
+    indent -= 1;
+    break;
   }
+
 }

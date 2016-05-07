@@ -1,5 +1,5 @@
 {
     "retainLines": true,
-    "presets": ["es2015", "stage-3"],
-    "plugins": ["transform-flow-strip-types"]
+    "presets": ["es2015", "stage-0"],
+    "plugins": ["transform-flow-strip-types", "transform-async-to-generator"]
 }
