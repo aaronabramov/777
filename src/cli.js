@@ -11,9 +11,7 @@ const files = args
 files.forEach(require);
 
 run(spec).then(({failed}) => {
-  if (failed) {
-    process.exit(1);
-  } else {
-    process.exit(0);
-  }
+  process.on('exit', () => {
+    process.exit(failed ? 1 : 0);
+  });
 });

@@ -7,6 +7,11 @@ import invariant from '../invariant';
 import type {DispatcherData, DispatcherEvent, DispatcherObject} from '../types';
 let indent = 0;
 
+let passed;
+let failed;
+let skipped;
+passed = failed = skipped = 0;
+
 function getIndent() {
   return Array(indent + 1).join('  ');
 }
@@ -30,11 +35,13 @@ export default function(
     console.log(getIndent() + chalk.red('✘'), object.name);
     invariant(data && data.error);
     errors.push({object, error: data.error});
+    failed += 1;
     break;
 
   case 'test_pass':
     invariant(object);
     console.log(getIndent() + chalk.green('✔'), object.name);
+    passed += 1;
     break;
 
   case 'suite_end':
@@ -44,9 +51,15 @@ export default function(
   case 'test_skip':
     invariant(object);
     console.log(getIndent() + chalk.yellow('•', object.name));
+    skipped += 1;
     break;
 
   case 'end':
+    console.log(
+      chalk.green(`\npassed ${passed}`),
+      chalk.red(`failed ${failed}`),
+      chalk.yellow(`skipped ${skipped}`),
+    );
     errors.forEach(({object, error}) => {
       console.log(object.name + ':');
       console.log(chalk.red(error.stack));

@@ -25,7 +25,11 @@ export async function run(callback: Function) {
 
     if (!visited.get(describe)) {
       visited.set(describe, true);
-      dispatcher.dispatch('suite_start', describe);
+      if (describe === global.__global_describe__) {
+        dispatcher.dispatch('start', describe);
+      } else {
+        dispatcher.dispatch('suite_start', describe);
+      }
       for (let it of describe.its) {
         try {
           await runIt(dispatch, stack, it);
@@ -40,12 +44,14 @@ export async function run(callback: Function) {
         stack.push(unvisited);
       } else {
         stack.pop();
-        dispatch('suite_end', describe);
+        if (describe === global.__global_describe__) {
+          dispatch('end', describe);
+        } else {
+          dispatch('suite_end', describe);
+        }
       }
     }
   }
-
-  dispatch('end');
 
   return {failed};
 }

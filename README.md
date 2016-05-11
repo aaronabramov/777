@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/dmitriiabramov/test_runner.svg?branch=master)](https://travis-ci.org/dmitriiabramov/test_runner)
+[![Build Status](https://travis-ci.org/dmitriiabramov/777.svg?branch=master)](https://travis-ci.org/dmitriiabramov/777)
