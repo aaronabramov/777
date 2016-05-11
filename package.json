@@ -1,6 +1,6 @@
 {
   "name": "777",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "minimalistic test runner",
   "main": "package/index.js",
   "scripts": {
