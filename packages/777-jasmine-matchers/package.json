@@ -1,0 +1,16 @@
+{
+  "name": "777-jasmine-matchers",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "true"
+  },
+  "files": [
+    "build/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dmitriiabramov/777.git"
+  },
+  "author": "Dmitrii Abramov"
+}
