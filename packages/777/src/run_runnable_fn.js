@@ -1,5 +1,5 @@
 // @flow
-import type {RunnableFunction} from './types';
+import type {RunnableFunction} from '../../../types';
 
 export default function runRunnableFunction(
   fn: RunnableFunction,

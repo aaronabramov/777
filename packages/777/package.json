@@ -18,7 +18,7 @@
   "author": "Dmitrii Abramov",
   "license": "MIT",
   "dependencies": {
-    "777-reporter-spec": "*",
+    "777-reporter-spec": "^0.0.2",
     "chalk": "^1.1.3"
   }
 }

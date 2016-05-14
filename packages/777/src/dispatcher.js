@@ -1,5 +1,9 @@
 // @flow
-import type {DispatcherEvent, DispatcherData, DispatcherObject} from './types';
+import type {
+  DispatcherEvent,
+  DispatcherData,
+  DispatcherObject,
+} from '../../../types';
 
 export default class Dispatcher {
   callbacks: Array<Function>;

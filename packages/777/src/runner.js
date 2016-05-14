@@ -1,7 +1,6 @@
 // @flow
 
-import type It from './it';
-import type Describe from './describe';
+import type {It, Describe} from '../../../types';
 
 import {last} from './utils';
 import Dispatcher from './dispatcher';

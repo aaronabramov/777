@@ -1,8 +1,8 @@
 {
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "test": "eslint . && flow && babel-node scripts/test.js",
-    "prepublish": "npm run bootstrap && babel-node scripts/build"
+    "build": "babel-node scripts/build",
+    "test": "npm run build && eslint . && flow && babel-node scripts/test.js"
   },
   "files": [
     "package/",

@@ -1,18 +1,35 @@
 // @flow
-import Describe from './describe';
-import It from './it';
+
 import {last} from './utils';
 
-import type {RunnableFunction} from './types';
+import type {It, Describe, RunnableFunction} from '../../../types';
 
 const GLOBAL_DESCRIBE_NAME = '__global_describe__';
 
-global.__global_describe__ = new Describe(GLOBAL_DESCRIBE_NAME);
+global.__global_describe__ = makeDescribe(GLOBAL_DESCRIBE_NAME);
 global.__describe_stack__ = [global.__global_describe__];
 global.__is_there_any_only_calls__ = false;
 
+function makeIt(name: string, fn: RunnableFunction): It {
+  return {name, fn, skipped: false, only: false};
+}
+
+function makeDescribe(name: string): Describe {
+  return {
+    name,
+    its: [],
+    children: [],
+    beforeEach: [],
+    beforeAll: [],
+    afterEach: [],
+    afterAll: [],
+    skipped: false,
+    only :false,
+  };
+}
+
 function addDescribe(name: string, fn: () => void) {
-  const describe = new Describe(name);
+  const describe = makeDescribe(name);
   last(global.__describe_stack__).children.push(describe);
   global.__describe_stack__.push(describe);
   fn();
@@ -21,7 +38,7 @@ function addDescribe(name: string, fn: () => void) {
 }
 
 function addIt(name: string, fn: RunnableFunction): It {
-  const it = new It(name, fn);
+  const it = makeIt(name, fn);
   last(global.__describe_stack__).its.push(it);
   return it;
 }

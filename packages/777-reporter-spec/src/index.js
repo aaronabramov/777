@@ -2,9 +2,19 @@
 /* eslint-disable no-console */
 
 import chalk from 'chalk';
-import invariant from '../invariant';
 
-import type {DispatcherData, DispatcherEvent, DispatcherObject} from '../types';
+function invariant(condition, message) {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+import type {
+  DispatcherData,
+  DispatcherEvent,
+  DispatcherObject,
+} from '../../../types';
+
 let indent = 0;
 
 let passed;

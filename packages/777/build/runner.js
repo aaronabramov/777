@@ -8,7 +8,6 @@
 
 
 
-
   function _callee(callback) {var 
     visited, 
     stack, 
@@ -65,17 +64,60 @@
 
 
 
+    context, 
 
-    context, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, 
+    failedInBeforeEach, 
+    failedInIt, 
+    firstFailedInAfterEach, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, 
+
+
+
     fn, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, 
 
-    _fn;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:dispatch('test_start', it);if (!isTestSkipped(it, stack)) {_context2.next = 5;break;}dispatch('test_skip', it);dispatch('test_end', it);return _context2.abrupt('return');case 5:_context2.prev = 5;context = (0, _create2.default)(null);_iteratorNormalCompletion2 = true;_didIteratorError2 = false;_iteratorError2 = undefined;_context2.prev = 10;_iterator2 = (0, _getIterator3.default)(getBeforeEachHooks(stack));case 12:if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {_context2.next = 19;break;}fn = _step2.value;_context2.next = 16;return (0, _run_runnable_fn2.default)(fn, context);case 16:_iteratorNormalCompletion2 = true;_context2.next = 12;break;case 19:_context2.next = 25;break;case 21:_context2.prev = 21;_context2.t0 = _context2['catch'](10);_didIteratorError2 = true;_iteratorError2 = _context2.t0;case 25:_context2.prev = 25;_context2.prev = 26;if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}case 28:_context2.prev = 28;if (!_didIteratorError2) {_context2.next = 31;break;}throw _iteratorError2;case 31:return _context2.finish(28);case 32:return _context2.finish(25);case 33:_context2.next = 35;return (0, _run_runnable_fn2.default)(it.fn, context);case 35:_iteratorNormalCompletion3 = true;_didIteratorError3 = false;_iteratorError3 = undefined;_context2.prev = 38;_iterator3 = (0, _getIterator3.default)(getAfterEachHooks(stack));case 40:if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {_context2.next = 47;break;}_fn = _step3.value;_context2.next = 44;return (0, _run_runnable_fn2.default)(_fn, context);case 44:_iteratorNormalCompletion3 = true;_context2.next = 40;break;case 47:_context2.next = 53;break;case 49:_context2.prev = 49;_context2.t1 = _context2['catch'](38);_didIteratorError3 = true;_iteratorError3 = _context2.t1;case 53:_context2.prev = 53;_context2.prev = 54;if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}case 56:_context2.prev = 56;if (!_didIteratorError3) {_context2.next = 59;break;}throw _iteratorError3;case 59:return _context2.finish(56);case 60:return _context2.finish(53);case 61:
-            dispatch('test_pass', it);_context2.next = 68;break;case 64:_context2.prev = 64;_context2.t2 = _context2['catch'](5);
-
-            dispatch('test_fail', it, { error: _context2.t2 });throw _context2.t2;case 68:_context2.prev = 68;
 
 
-            dispatch('test_end', it);return _context2.finish(68);case 71:case 'end':return _context2.stop();}}}, _callee2, this, [[5, 64, 68, 71], [10, 21, 25, 33], [26,, 28, 32], [38, 49, 53, 61], [54,, 56, 60]]);}));return function runIt(_x2, _x3, _x4) {return ref.apply(this, arguments);};}();var _utils = require('./utils');var _dispatcher = require('./dispatcher');var _dispatcher2 = _interopRequireDefault(_dispatcher);var _run_runnable_fn = require('./run_runnable_fn');var _run_runnable_fn2 = _interopRequireDefault(_run_runnable_fn);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+
+
+
+
+
+
+
+
+
+
+    _fn, 
+
+
+
+
+
+
+
+
+    finalError;return _regenerator2.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:dispatch('test_start', it);if (!isTestSkipped(it, stack)) {_context2.next = 5;break;}dispatch('test_skip', it);dispatch('test_end', it);return _context2.abrupt('return');case 5:context = (0, _create2.default)(null);failedInBeforeEach = void 0;failedInIt = void 0;firstFailedInAfterEach = void 0; // run every beforeEach, but stop as soon as at least one fails
+            _context2.prev = 9;_iteratorNormalCompletion2 = true;_didIteratorError2 = false;_iteratorError2 = undefined;_context2.prev = 13;_iterator2 = (0, _getIterator3.default)(getBeforeEachHooks(stack));case 15:if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {_context2.next = 22;break;}fn = _step2.value;_context2.next = 19;return (0, _run_runnable_fn2.default)(fn, context);case 19:_iteratorNormalCompletion2 = true;_context2.next = 15;break;case 22:_context2.next = 28;break;case 24:_context2.prev = 24;_context2.t0 = _context2['catch'](13);_didIteratorError2 = true;_iteratorError2 = _context2.t0;case 28:_context2.prev = 28;_context2.prev = 29;if (!_iteratorNormalCompletion2 && _iterator2.return) {_iterator2.return();}case 31:_context2.prev = 31;if (!_didIteratorError2) {_context2.next = 34;break;}throw _iteratorError2;case 34:return _context2.finish(31);case 35:return _context2.finish(28);case 36:_context2.next = 41;break;case 38:_context2.prev = 38;_context2.t1 = _context2['catch'](9);failedInBeforeEach = _context2.t1;case 41:if (failedInBeforeEach) {_context2.next = 50;break;}_context2.prev = 42;_context2.next = 45;return (0, _run_runnable_fn2.default)(it.fn, context);case 45:_context2.next = 50;break;case 47:_context2.prev = 47;_context2.t2 = _context2['catch'](42);failedInIt = _context2.t2;case 50:_iteratorNormalCompletion3 = true;_didIteratorError3 = false;_iteratorError3 = undefined;_context2.prev = 53;_iterator3 = (0, _getIterator3.default)(getAfterEachHooks(stack));case 55:if (_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done) {_context2.next = 68;break;}_fn = _step3.value;_context2.prev = 57;_context2.next = 60;return (0, _run_runnable_fn2.default)(_fn, context);case 60:_context2.next = 65;break;case 62:_context2.prev = 62;_context2.t3 = _context2['catch'](57);firstFailedInAfterEach || (firstFailedInAfterEach = _context2.t3);case 65:_iteratorNormalCompletion3 = true;_context2.next = 55;break;case 68:_context2.next = 74;break;case 70:_context2.prev = 70;_context2.t4 = _context2['catch'](53);_didIteratorError3 = true;_iteratorError3 = _context2.t4;case 74:_context2.prev = 74;_context2.prev = 75;if (!_iteratorNormalCompletion3 && _iterator3.return) {_iterator3.return();}case 77:_context2.prev = 77;if (!_didIteratorError3) {_context2.next = 80;break;}throw _iteratorError3;case 80:return _context2.finish(77);case 81:return _context2.finish(74);case 82:finalError = void 0;
+            if (failedInBeforeEach) {
+              finalError = failedInBeforeEach;}
+
+
+            if (failedInIt) {
+              finalError = failedInIt;}
+
+
+            if (firstFailedInAfterEach) {
+              finalError = firstFailedInAfterEach;}
+
+
+            if (finalError) {
+              dispatch('test_fail', it, { error: finalError });} else 
+            {
+              dispatch('test_pass', it);}
+
+            dispatch('test_end', it);if (!
+
+            finalError) {_context2.next = 90;break;}throw (
+              finalError);case 90:case 'end':return _context2.stop();}}}, _callee2, this, [[9, 38], [13, 24, 28, 36], [29,, 31, 35], [42, 47], [53, 70, 74, 82], [57, 62], [75,, 77, 81]]);}));return function runIt(_x2, _x3, _x4) {return ref.apply(this, arguments);};}();var _utils = require('./utils');var _dispatcher = require('./dispatcher');var _dispatcher2 = _interopRequireDefault(_dispatcher);var _run_runnable_fn = require('./run_runnable_fn');var _run_runnable_fn2 = _interopRequireDefault(_run_runnable_fn);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
 
 
 
