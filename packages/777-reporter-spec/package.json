@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "main": "build/index.js",
   "scripts": {
-    "test": "../jest-777/bin/777 **/__tests__/*.js"
+    "test": "true"
   },
   "files": [
     "build/"
