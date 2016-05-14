@@ -2,6 +2,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "babel-node scripts/build",
+    "postinstall": "npm run bootstrap",
     "test": "npm run build && eslint . && flow && babel-node scripts/test.js"
   },
   "files": [
