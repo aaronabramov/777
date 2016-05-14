@@ -55,11 +55,11 @@ export default function(
     break;
 
   case 'end':
-    console.log(
+    console.log([
       chalk.green(`\npassed ${passed}`),
       chalk.red(`failed ${failed}`),
       chalk.yellow(`skipped ${skipped}`),
-    );
+    ].join(', '));
     errors.forEach(({object, error}) => {
       console.log(object.name + ':');
       console.log(chalk.red(error.stack));

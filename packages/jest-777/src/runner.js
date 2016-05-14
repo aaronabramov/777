@@ -65,17 +65,60 @@ async function runIt(dispatch, stack: Stack, it: It) {
     return;
   }
 
+  const context = Object.create(null);
+
+  let failedInBeforeEach: ?Error;
+  let failedInIt: ?Error;
+  let firstFailedInAfterEach: ?Error;
+
+  // run every beforeEach, but stop as soon as at least one fails
   try {
-    const context = Object.create(null);
     for (let fn of getBeforeEachHooks(stack)) { await runRunnableFunction(fn, context); }
-    await runRunnableFunction(it.fn, context);
-    for (let fn of getAfterEachHooks(stack)) { await runRunnableFunction(fn, context); }
-    dispatch('test_pass', it);
   } catch (error) {
-    dispatch('test_fail', it, {error});
-    throw error;
-  } finally {
-    dispatch('test_end', it);
+    failedInBeforeEach = error;
+  }
+
+   // if setup is successful, we run the test
+  if (!failedInBeforeEach) {
+    try {
+      await runRunnableFunction(it.fn, context);
+    } catch (error) {
+      failedInIt = error;
+    }
+  }
+
+  for (let fn of getAfterEachHooks(stack)) {
+    // we still need to run *every* afterEach even it the test failed
+    try {
+      await runRunnableFunction(fn, context);
+    } catch (error) {
+      firstFailedInAfterEach || (firstFailedInAfterEach = error);
+    }
+  }
+
+  let finalError: ?Error;
+
+  if (failedInBeforeEach) {
+    finalError = failedInBeforeEach;
+  }
+
+  if (failedInIt) {
+    finalError = failedInIt;
+  }
+
+  if (firstFailedInAfterEach) {
+    finalError = firstFailedInAfterEach;
+  }
+
+  if (finalError) {
+    dispatch('test_fail', it, {error: finalError});
+  } else {
+    dispatch('test_pass', it);
+  }
+  dispatch('test_end', it);
+
+  if (finalError) {
+    throw finalError;
   }
 }
 
