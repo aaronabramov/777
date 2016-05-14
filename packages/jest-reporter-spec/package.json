@@ -1,0 +1,22 @@
+{
+  "name": "777-reporter-spec",
+  "version": "0.0.1",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "../jest-777/bin/777 **/__tests__/*.js"
+  },
+  "files": [
+    "build/",
+    "bin/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dmitriiabramov/777.git"
+  },
+  "bin": "./bin/777",
+  "author": "Dmitrii Abramov",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}

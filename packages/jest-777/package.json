@@ -1,0 +1,23 @@
+{
+  "name": "777",
+  "version": "0.0.1",
+  "description": "minimalistic test runner",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "babel-node ./src/cli.js **/__tests__/*_test.js"
+  },
+  "files": [
+    "build/",
+    "bin/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dmitriiabramov/777.git"
+  },
+  "bin": "./bin/777",
+  "author": "Dmitrii Abramov",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
