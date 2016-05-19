@@ -1,0 +1,20 @@
+{
+  "name": "777-matchers",
+  "version": "0.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "true"
+  },
+  "files": [
+    "build/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dmitriiabramov/777.git"
+  },
+  "author": "Dmitrii Abramov",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
