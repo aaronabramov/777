@@ -2,7 +2,7 @@ import {it, describe} from '../../777/src';
 import assert from 'assert';
 import {expect} from '../src';
 
-describe.only('matchers', () => {
+describe('matchers', () => {
   describe('toBe', () => {
     it('passes', () => {
       expect(1).toBe(1);
@@ -102,6 +102,77 @@ describe.only('matchers', () => {
           assert.ok(err.message.match('not to be falsy'));
         }
       });
+    });
+  });
+
+  describe('toMatch', () => {
+    it('passes', () => {
+      expect('aabbaa').toMatch(/bb/);
+      expect('11122111').toMatch('22');
+    });
+
+    it('fails', () => {
+      try {
+        expect('111').toMatch(/222/);
+        throw new Error('should not be thrown');
+      } catch (err) {
+        assert.ok(err.message.match('to match'));
+      }
+    });
+
+    it('passes isNot', () => {
+      expect('aaa').not.toMatch('bbb');
+      expect('aaa').not.toMatch(/bbb/);
+      expect('aaa').not.toMatch(/bbb/g);
+    });
+
+    it('fails isNot', () => {
+      try {
+        expect('111').not.toMatch(/111/);
+        throw new Error('should not be thrown');
+      } catch (err) {
+        assert.ok(err.message.match('not to match'));
+      }
+    });
+  });
+
+  describe('toThrow', () => {
+    it('passes', () => {
+      expect(() => { throw new Error('lol'); }).toThrow();
+      expect(() => { throw new Error('lol'); }).toThrow('lol');
+      expect(() => { throw new Error('lol'); }).toThrow(/lol/);
+      expect(() => { throw new Error('lol'); }).toThrow(Error);
+    });
+
+    it('passes isNot', () => {
+      expect(() => {}).not.toThrow();
+      expect(() => { throw new Error('lol'); }).not.toThrow('lmao');
+      expect(() => { throw new Error('lol'); }).not.toThrow(/lmao/);
+      expect(() => { throw new Error('lol'); }).not.toThrow(SyntaxError);
+    });
+
+    ['abc', /abc/, Error].forEach(expected => {
+      it(`fails to throw ${expected}`, () => {
+        try {
+          expect(() => { throw new SyntaxError('cde'); }).toThrow(expected);
+          throw new Error('should not be thrown');
+        } catch (error) {
+          if (!error.message.match('to throw')) {
+            throw new Error(`expected matcher to fail. ${expected}`);
+          }
+        }
+      });
+    });
+
+    it('fails with no expect value', () => {
+      try {
+        expect(() => {}).toThrow();
+        throw new Error('should not be thrown');
+      } catch (error) {
+        if (!error.message.match('to throw')) {
+          throw new Error(`expected matcher to fail`);
+        }
+      }
     });
   });
 });
