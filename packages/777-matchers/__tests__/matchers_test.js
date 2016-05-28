@@ -175,4 +175,37 @@ describe('matchers', () => {
       }
     });
   });
+
+  describe('toDeepEqual', () => {
+    it('passes', () => {
+      expect(1).toDeepEqual(1);
+      expect(null).toDeepEqual(null);
+      expect(undefined).toDeepEqual(undefined);
+      expect('aaa').toDeepEqual('aaa');
+      expect(1.45).toDeepEqual(1.45);
+      expect({}).toDeepEqual({});
+      expect({a: 5}).toDeepEqual({a: 5});
+      expect({a: {b: 5}}).toDeepEqual({a: {b: 5}});
+      expect([]).toDeepEqual([]);
+      expect([1]).toDeepEqual([1]);
+      expect([1, {a: 5}]).toDeepEqual([1, {a: 5}]);
+    });
+
+    it('fails', () => {
+      expect(() => expect({a: 4}).toDeepEqual({a: 5})).toThrow('to deep equal');
+      expect(() => expect(1).toDeepEqual(2)).toThrow('to deep equal');
+    });
+
+    it('passes isNot', () => {
+      expect({a: 5}).not.toDeepEqual({a: 6});
+      expect(1).not.toDeepEqual(2);
+      expect('a').not.toDeepEqual('b');
+      expect(null).not.toDeepEqual(undefined);
+    });
+
+    it('fails isNot', () => {
+      expect(() => expect(1).not.toDeepEqual(1)).toThrow('to not be equal');
+      expect(() => expect({a: 5}).not.toDeepEqual({a: 5})).toThrow('to not be equal');
+    });
+  });
 });

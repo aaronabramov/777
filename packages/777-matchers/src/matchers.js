@@ -1,3 +1,5 @@
+import deepEqual from 'deep-equal';
+
 export default {
   toBe(actual, expected, {isNot} = {}) {
 
@@ -74,6 +76,16 @@ export default {
       }
     } else {
       throw new Error(`unexpected argument: ${expected}`);
+    }
+  },
+
+  toDeepEqual(actual, expected, {isNot} = {}) {
+    if (!isNot ^ deepEqual(actual, expected, {strict: true})) {
+      const message = isNot ?
+        `expected to not be equal` :
+        `expected '${actual}' to deep equal '${expected}'`;
+
+      return {message};
     }
   },
 };
