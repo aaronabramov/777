@@ -1,6 +1,6 @@
 import {describe, it} from '../src';
 import assert from 'assert';
-import runInline from './run_inline';
+import runInline from '../../../utils/run_inline';
 
 describe('skip/only', function() {
   it('skips a test', function() {

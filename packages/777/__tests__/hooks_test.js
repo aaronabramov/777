@@ -1,5 +1,5 @@
 import {describe, it} from '../src';
-import runInline from './run_inline';
+import runInline from '../../../utils/run_inline';
 import assert from 'assert';
 
 describe('afterEach', () => {

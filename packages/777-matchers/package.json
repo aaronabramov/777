@@ -1,0 +1,20 @@
+{
+  "name": "777-matchers",
+  "version": "0.0.0",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "babel-node ../777/src/cli.js **/__tests__/*_test.js"
+  },
+  "files": [
+    "build/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dmitriiabramov/777.git"
+  },
+  "author": "Dmitrii Abramov",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^1.1.3"
+  }
+}
