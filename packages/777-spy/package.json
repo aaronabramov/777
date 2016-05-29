@@ -1,5 +1,5 @@
 {
-  "name": "777-matchers",
+  "name": "777-spy",
   "version": "0.0.0",
   "main": "build/index.js",
   "scripts": {
@@ -17,6 +17,5 @@
   "dependencies": {
   },
   "devDependencies": {
-    "deep-equal": "^1.0.1"
   }
 }

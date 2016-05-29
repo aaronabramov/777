@@ -76,3 +76,6 @@ export function beforeEach(fn: RunnableFunction): void {
 export function afterEach(fn: RunnableFunction): void {
   last(global.__describe_stack__).afterEach.push(fn);
 }
+
+export const specify = it;
+export const context = describe;

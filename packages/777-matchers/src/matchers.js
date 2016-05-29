@@ -83,7 +83,7 @@ export default {
     if (!isNot ^ deepEqual(actual, expected, {strict: true})) {
       const message = isNot ?
         `expected to not be equal` :
-        `expected '${actual}' to deep equal '${expected}'`;
+        `expected '${JSON.stringify(actual)}' to deep equal '${JSON.stringify(expected)}'`;
 
       return {message};
     }
