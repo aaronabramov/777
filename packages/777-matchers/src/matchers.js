@@ -4,7 +4,7 @@ import {assertNoExpectedValue} from './utils';
 export default {
   toBe(actual, expected, {isNot} = {}) {
 
-    if (!isNot ^ (actual === expected)) {
+    if (isNot ^ (actual !== expected)) {
       return {
         message: `expected ${actual} to ${isNot ? '!==' : '==='} ${expected}`,
       };
@@ -13,7 +13,7 @@ export default {
 
   toBeDefined(actual, expected, {isNot} = {}) {
     assertNoExpectedValue(expected);
-    if (!isNot ^ (undefined !== actual)) {
+    if (isNot ^ (undefined === actual)) {
       return {
         message: `expected ${expected} ${isNot ? 'not' : ''} to be defined`,
       };
@@ -23,7 +23,7 @@ export default {
   toBeFalsy(actual, expected, {isNot} = {}) {
     assertNoExpectedValue(expected);
 
-    if (!isNot ^ !actual) {
+    if (isNot ^ !!actual) {
       return {
         message: `expected ${actual}${isNot ? ' not' : ''} to be falsy`,
       };
@@ -31,7 +31,7 @@ export default {
   },
 
   toMatch(actual, expected, {isNot} = {}) {
-    if (!isNot ^ !!actual.match(expected)) {
+    if (isNot ^ !actual.match(expected)) {
       return {
         message: `expected ${actual}${isNot ? ' not' : ''} to match ${expected}`,
       };
@@ -52,7 +52,7 @@ export default {
     }
 
     if (!expected) {
-      if (!isNot ^ !!error) {
+      if (isNot ^ !error) {
         const message = isNot ?
           `expected the function to not throw, but it threw ${formatError(error)}` :
           `expected the function to throw, but it didn't`;
@@ -60,7 +60,7 @@ export default {
         return {message};
       }
     } else if (typeof expected === 'string' || expected.constructor.name === 'RegExp') {
-      if (!isNot ^ !!(error && error.message.match(expected))) {
+      if (isNot ^ !(error && error.message.match(expected))) {
         const message = isNot ?
           `expected the function to not throw an error matching ${expected}, but it did` :
           `expected the function to throw an error matching ${expected}, but it didn't`;
@@ -68,7 +68,7 @@ export default {
         return {message};
       }
     } else if (typeof expected === 'function') {
-      if (!isNot ^ (error && (error.constructor === expected))) {
+      if (isNot ^ !(error && (error.constructor === expected))) {
         const message = isNot ?
           `expected the function to not throw '${expected}' error, but it did` :
           `expected the function to throw '${expected}' error, but it didn't`;
@@ -81,7 +81,7 @@ export default {
   },
 
   toDeepEqual(actual, expected, {isNot} = {}) {
-    if (!isNot ^ deepEqual(actual, expected, {strict: true})) {
+    if (isNot ^ !deepEqual(actual, expected, {strict: true})) {
       const message = isNot ?
         `expected to not be equal` :
         `expected '${JSON.stringify(actual)}' to deep equal '${JSON.stringify(expected)}'`;

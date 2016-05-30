@@ -14,7 +14,12 @@ export function expect(actual) {
 
 function makeMatcher(matcher, isNot, actual) {
   return function(expected) {
-    const result = matcher.call(null, actual, expected, {isNot});
+    const result = matcher.call(
+      null,
+      actual,
+      expected,
+      {isNot, args: arguments}
+    );
 
     if (result) {
       throw new Error(result.message);

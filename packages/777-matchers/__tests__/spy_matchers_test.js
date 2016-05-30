@@ -40,4 +40,19 @@ describe('spy matchers', () => {
       expect(() => expect(this.spy).not.toHaveBeenCalledTimes(1)).toThrow('but it was');
     });
   });
+
+  describe('toHaveBeenCalledWith()', () => {
+    it('passes', function() {
+      this.spy(1, 2, 3);
+      expect(this.spy).toHaveBeenCalledWith(1);
+      expect(this.spy).toHaveBeenCalledWith(1, 2);
+      expect(this.spy).toHaveBeenCalledWith(1, 2, 3);
+
+      expect(this.spy).not.toHaveBeenCalledWith(4);
+    });
+
+    it('fails', function() {
+      expect(() => expect(this.spy).toHaveBeenCalledWith(1)).toThrow('be called');
+    });
+  });
 });
