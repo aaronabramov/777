@@ -105,5 +105,7 @@ function _createSpy({obj, fnName} = {}) {
     },
   };
 
+  spyFn.thisIsASpy = true; // spy identifier
+
   return spyFn;
 }

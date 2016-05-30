@@ -28,6 +28,7 @@ function buildPackage(p) {
     spawnSync('mkdir', ['-p', path.dirname(destPath)]);
     fs.writeFileSync(destPath, transformed);
     process.stdout.write(
+      chalk.green('  • ') +
       path.relative(p, file) +
       chalk.green(' ⇒ ') +
       path.relative(p, destPath) +
@@ -37,3 +38,4 @@ function buildPackage(p) {
 }
 
 getPackages().forEach(buildPackage);
+process.stdout.write('\n');

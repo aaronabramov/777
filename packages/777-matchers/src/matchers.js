@@ -1,4 +1,5 @@
 import deepEqual from 'deep-equal';
+import {assertNoExpectedValue} from './utils';
 
 export default {
   toBe(actual, expected, {isNot} = {}) {
@@ -89,12 +90,6 @@ export default {
     }
   },
 };
-
-function assertNoExpectedValue(expected) {
-  if (expected) {
-    throw new Error('this matcher does not accept arguments');
-  }
-}
 
 function formatError(err) {
   return err.toString();

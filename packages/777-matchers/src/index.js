@@ -1,10 +1,12 @@
 import matchers from './matchers';
+import spyMatchers from './spy_matchers';
 
 export function expect(actual) {
   const result = {not: {}};
-  Object.keys(matchers).forEach(name => {
-    result[name] = makeMatcher(matchers[name], false, actual);
-    result.not[name] = makeMatcher(matchers[name], true, actual);
+  const allMatchers = {...matchers, ...spyMatchers};
+  Object.keys(allMatchers).forEach(name => {
+    result[name] = makeMatcher(allMatchers[name], false, actual);
+    result.not[name] = makeMatcher(allMatchers[name], true, actual);
   });
 
   return result;
